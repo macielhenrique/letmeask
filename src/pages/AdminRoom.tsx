@@ -11,13 +11,12 @@ import { database } from '../services/firebase';
 import "../styles/room.scss";
 import { Question } from '../components/Question';
 import { useRoom } from '../hooks/useRoom';
-import { Link } from 'react-router-dom';
 
 type RoomParams = {
   id: string;
 }
 
-export function Room(){
+export function AdminRoom(){
   const {user} = useAuth();
   const params= useParams<RoomParams>();
   const [newQuestion,setNewQuestion]= useState('');
@@ -52,7 +51,10 @@ export function Room(){
     <header>'
       <div className="content">
         <img src={logoImg} alt="logo letmeask" />
-        {roomId ? <RoomCode code={roomId}/> : null}
+        <div>
+          {roomId ? <RoomCode code={roomId}/> : null}
+          <Button isOutlined>Encerrar sala</Button> 
+        </div>
       </div>
     </header>
 
@@ -62,25 +64,6 @@ export function Room(){
         { questions.length > 0 && <span>{questions.length} pergunta(s)</span> }
       </div>
 
-      <form onSubmit={handleSendQuestion}>
-        <textarea 
-        placeholder= "O que você quer perguntar ?"
-        onChange={event => setNewQuestion(event.target.value)}
-        value={newQuestion}
-        />
-
-        <div className="form-footer">
-          {user ? (
-            <div className="user-info">
-              <img src={user.avatar} alt={user.name} />
-              <span>{user.name}</span>
-            </div>
-          ): (
-            <span>Para enviar uma perguntar, <Link to= '/'><button >faça seu login</button> </Link> </span>
-          )}
-          <Button type="submit" disabled={!user}>Enviar uma pergunta</Button>
-        </div>
-      </form>
       <div className="question-list">
       {questions.map(question=>{
         return(
